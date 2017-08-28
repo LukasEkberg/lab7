@@ -11,15 +11,13 @@ import lab7.TicTacToe;
 //lämpliga import-satser här
 class ViewControl extends JFrame implements ActionListener {
 
-	private Boardgame game;
 	private int size;
 	private Square[][] board;        // Square är subklass till JButton
 	private JLabel mess = new JLabel();
 	
 	
-	ViewControl (Boardgame gm, int n){  // OK med fler parametrar om ni vill!
-	    size = n;
-	    game = gm;
+	ViewControl (){  // OK med fler parametrar om ni vill!
+	    size = 3;
 	    
 	    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    setTitle("View-Control");
@@ -27,7 +25,7 @@ class ViewControl extends JFrame implements ActionListener {
         setSize(1280, 768);    
 
 	    JPanel panel = new JPanel();
-	    mess = new JLabel(game.getMessage());
+	    mess = new JLabel("Waiting for player to connect");
 	    panel.add(mess);   
 	    add(panel, BorderLayout.PAGE_START);
 	    
@@ -39,7 +37,7 @@ class ViewControl extends JFrame implements ActionListener {
 	      for (int i = 0; i < size; i++)
 	    		for (int j = 0; j < size; j++)
 	    		{
-	    			board[i][j] = new Square(game.getStatus(i, j), i, j);
+	    			board[i][j] = new Square(null, i, j);
 	    			board[i][j].addActionListener(this);	
 	    			buttonPanel.add(board[i][j]);
 	    		}      
@@ -51,11 +49,17 @@ class ViewControl extends JFrame implements ActionListener {
 		Square a = (Square)event.getSource();
 		int i = a.geti();
 		int j = a.getj();
-    	game.move(i+1,j+1);			
-    
-		updateButtons();
-		updateMessage();
+		int sum = i*3+j;
+    	System.out.println("move " + sum);
+		//out.println("move" + i + j)
+		//game.move(i+1,j+1);			
+		//skicka ut drag
+		
+		//updateButtons();
+		//updateMessage();
+		//ta emot drag och meddelande
 	}
+	//uppdatera med loop
 	public void updateButtons(){
 		for (int i = 0; i < size; i++)
     		for (int j = 0; j < size; j++)
@@ -63,11 +67,12 @@ class ViewControl extends JFrame implements ActionListener {
 		
 	}
 	
+	//antagligen ta bort
 	public void updateMessage(){
 		mess.setText(game.getMessage());
 	}
 	
 	public static void main(String[] args){
-		new ViewControl(new TicTacToe(), 3).setVisible(true);
+		new ViewControl().setVisible(true);
 	}
  }
