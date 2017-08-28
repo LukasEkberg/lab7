@@ -4,9 +4,24 @@ public class TicTacToe2 {
 	String board[][] = new String[3][3] ;
 	Player currentPlayer;
 	
-	void playerWon(){
+	public boolean getWinner() {
+		boolean h;
+		boolean v;
+
+		for(int i=0; i<3; i++) {
+			h = board[i][0].equals(board[i][1]) && board[i][0].equals(board[i][2]);
+			v = board[0][i].equals(board[1][i]) && board[0][i].equals(board[2][i]);
+			if (h || v)
+				return true;
+			}
 		
-	}
+		if (board[0][0].equals(board[1][1]) && board[0][0].equals(board[2][2]) ||
+			board[0][2].equals(board[1][1]) && board[0][2].equals(board[2][0]) )
+			return true;
+		
+		return false;
+		
+		}
 	
 	public synchronized boolean move(int i, int j, Player player){
 		if (player == currentPlayer && board[i][j] == null){
