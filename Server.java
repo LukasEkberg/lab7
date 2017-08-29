@@ -2,13 +2,11 @@ package lab7;
 
 import java.net.*;
 import java.io.*;
-import java.util.*;
-import TicTacToe2.*;
 
 public class Server {
 	
     public static void main( String[] args) throws Exception {
-    	ServerSocket sock = new ServerSocket(6700,100);
+    	ServerSocket sock = new ServerSocket(6702,100);
     	System.out.println("Server is active");
     	TicTacToe2 game =  new TicTacToe2();
 		try {
@@ -16,9 +14,10 @@ public class Server {
 				Player p1 = new Player(sock.accept(), "X", game);
 				System.out.println("Spelare 1");
 		    	Player p2 = new Player(sock.accept(), "O", game);
-		    	System.out.println("Spelare 2");, 
+		    	System.out.println("Spelare 2");
 		    	p1.setOpponent(p2);
 		    	p2.setOpponent(p1);
+		    	game.currentPlayer = p1;
 		    	p1.start();
 		    	p2.start();
 			}
@@ -62,15 +61,21 @@ class Player extends Thread{
     
     public void playerMoved(int i, int j){
     	ut.println("opponent_move " + i + j );
+    	if(game.getWinner())
+    		ut.println("message You lost!");
+    	else
+    		ut.println("message Your turn!");
     }
     
     public void run() {
-	
+ 
 		try {
 			//Går igång när alla spelare har connectat
+			ut.println("MARK " + mark);
 			ut.println("message All players have connected");
-			if (mark == "X")
+			if (mark == "X"){
 				ut.println("message Your turn");
+			}
 			else
 				ut.println("message Waiting for player 1");
 			
@@ -79,9 +84,23 @@ class Player extends Thread{
 				if (mess.startsWith("move")){
 					int i = Integer.parseInt(mess.substring(5,6));
 					int j = Integer.parseInt(mess.substring(6,7));
+
 					if (game.move(i,j,this)){
-						
+						ut.println("valid");
+						ut.println("message Wait for other player");
+						if(game.getWinner())
+							
+							ut.println("message You won!");
 					}
+					else{
+						if(!game.currentPlayer.equals(this)){
+							ut.println("message Not your turn!");
+						}
+						else
+							ut.println("message unvalid move");
+					}
+					
+					
 				}
 				
 			}
